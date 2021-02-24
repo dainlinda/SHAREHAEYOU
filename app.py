@@ -10,9 +10,15 @@ from flask import session
 # 암호화
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
+import bcrypt
+
+#flask_cors 사용
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 api = Api(app)
+#flask_cors 사용
+CORS(app)
 
 # db 연결
 db = pymysql.connect(

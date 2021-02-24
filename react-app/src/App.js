@@ -41,11 +41,59 @@ function Home() {
 }
 
 function Login() {
-  return <div>Login component</div>;
+  return (
+    <div>
+      <h1>로그인</h1>
+      <LoginForm onLogin={function(data) {
+        axios.post(`http://127.0.0.1:5000/login`,data)
+          .then(response=>console.log(response));
+        }
+        }/>
+    </div>
+  );
+}
+
+function LoginForm(props){
+  return(
+    <article>
+      <form
+        action=""
+        method="post"
+        onSubmit={function(e) {
+          e.preventDefault();
+          props.onLogin({
+            email: e.target.formBasicEmail.value,
+            password: e.target.formBasicPassword.value
+          });
+          e.target.reset();
+        }}
+      >
+        <Form.Group controlId="formBasicEmail">
+          <Form.Label>Email address</Form.Label>
+          <Form.Control type="email" placeholder="Enter email" name="formBasicEmail" />
+        </Form.Group>
+        <Form.Group controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control type="password" placeholder="Password" name="formBasicPassword" />
+        </Form.Group>
+
+        <Button variant="primary" type="submit">
+          로그인
+        </Button>
+      </form>
+    </article>
+  );
 }
 
 function Logout() {
-  return <div>Logout component</div>;
+  const [tmp,setTmp] = useState(1);
+  axios.get(`http://127.0.0.1:5000/logout`)
+    .then(response=>console.log(response));
+  return(
+    <div>
+      로그아웃 성공여부 띄워주기
+    </div>  
+  );
 }
 
 function Signup() {
