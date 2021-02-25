@@ -77,7 +77,7 @@ def login():
         # session.clear()
         # session['email'] = user['email']
         # return jsonify(status = "success", result = {"email": args["email"]})
-        access_token = create_access_token(identity=user['email'])
+        access_token = create_access_token(identity=user['id'])
         return jsonify(status = "success", access_token=access_token)
     else: #아이디, 비밀번호가 일치하지 않는 경우
         return jsonify(result = "Invalid Params!")
@@ -96,6 +96,54 @@ def protected():
 # def logout():
 #     session.clear()
 #     return jsonify(status = "success")
+
+"""
+Education APIs - 학력 CRUD
+
+Create API : 학교이름, 전공, 학위를 입력받아 새로운 학력을 만듭니다.
+Read API : 현재 등록된 학력 목록을 가져옵니다.
+Update API : 기존 학력의 내용 을 변경합니다.
+Delete API : 특정 학력을 제거합니다.
+"""
+parser = reqparse.RequestParser()
+parser.add_argument('user_id')
+parser.add_argument('name')
+
+class Education(Resource):
+    def get(self):
+        # WHERE EDUCATION.USER_ID =USER.ID
+        sql = "SELECT college, major, degree FROM `education`"
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        return jsonify(status = "success", result = result)
+        
+    
+    def post(self):
+        args = parser.parse_args()
+        sql = "INSERT INTO `board` (`name`) VALUES (%s)"
+        cursor.execute(sql, (args['name']))
+        db.commit()
+        
+        return jsonify(status = "success", result = {"name": args["name"]})
+        
+    def put(self):
+        args = parser.parse_args()
+        sql = "UPDATE `board` SET name = %s WHERE `id` = %s"
+        cursor.execute(sql, (args['name'], args["id"]))
+        db.commit()
+        
+        return jsonify(status = "success", result = {"id": args["id"], "name": args["name"]})
+    
+    
+    def delete(self):
+        args = parser.parse_args()
+        sql = "DELETE FROM `board` WHERE `id` = %s"
+        cursor.execute(sql, (args["id"], ))
+        db.commit()
+        
+        return jsonify(status = "success", result = {"id": args["id"]})
+
+api.add_resource(Education, '/education')
 
 if __name__ == '__main__':
     app.run(debug=True)
