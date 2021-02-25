@@ -33,7 +33,7 @@ function Education(){
         <Form.Label column sm={2}>
         </Form.Label>
         <Col sm={10}>
-          <Form.Control type="college" placeholder="학교이름" />
+          <Form.Control name="college" placeholder="학교이름" />
         </Col>
       </Form.Group>
 
@@ -41,7 +41,7 @@ function Education(){
         <Form.Label column sm={2}>
         </Form.Label>
         <Col sm={10}>
-          <Form.Control type="major" placeholder="전공" />
+          <Form.Control name="major" placeholder="전공" />
         </Col>
       </Form.Group>
       <fieldset>
@@ -103,7 +103,7 @@ function Awards(){
         <Form.Label column sm={2}>
         </Form.Label>
         <Col sm={10}>
-          <Form.Control type="award" placeholder="수상내역" />
+          <Form.Control name="award" placeholder="수상내역" />
         </Col>
       </Form.Group>
 
@@ -111,7 +111,7 @@ function Awards(){
         <Form.Label column sm={2}>
         </Form.Label>
         <Col sm={10}>
-          <Form.Control type="awardDetail" placeholder="상세내역" />
+          <Form.Control name="awardDetail" placeholder="상세내역" />
         </Col>
       </Form.Group>
 
@@ -164,7 +164,7 @@ function Projects(){
         <Form.Label column sm={2}>
         </Form.Label>
         <Col sm={10}>
-          <Form.Control type="project" placeholder="프로젝트" />
+          <Form.Control name="project" placeholder="프로젝트" />
         </Col>
       </Form.Group>
 
@@ -172,7 +172,7 @@ function Projects(){
         <Form.Label column sm={2}>
         </Form.Label>
         <Col sm={10}>
-          <Form.Control type="projectDetail" placeholder="프로젝트상세" />
+          <Form.Control name="projectDetail" placeholder="프로젝트상세" />
         </Col>
       </Form.Group>
 

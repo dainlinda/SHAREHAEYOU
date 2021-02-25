@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export function Logout() {
   const [tmp, setTmp] = useState([]);
-  axios.get(`http://127.0.0.1:5000/logout`)
+  useEffect(() => {
+    axios.get(`http://127.0.0.1:5000/logout`)
     .then(response => {
-      console.log(response);
-      setTmp(response.data);
-    });
+    console.log(response);
+    setTmp(response.data);
+  });
+  },[])
+  // axios.get(`http://127.0.0.1:5000/logout`)
+  //   .then(response => {
+  //     console.log(response);
+  //     setTmp(response.data);
+  //   });
   return (
     <div>
       로그아웃 성공여부 띄워주기
