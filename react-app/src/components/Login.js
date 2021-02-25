@@ -4,13 +4,6 @@ import { Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 
 export function Login() {
-  const [token,setToken] = useState();
-  useEffect(() => {
-    axios.get(`http://127.0.0.1:5000/protected`,{Authorization: "Bearer " + token})
-          .then(response => {
-            console.log(response);
-          })
-  },[token]);
   
   return (
     <div>
@@ -19,12 +12,12 @@ export function Login() {
         axios.post(`http://127.0.0.1:5000/login`, data)
           .then(response => {
             console.log(response);
-            setToken(response.data.access_token);
+            localStorage.setItem("token", (response.data.access_token));
           });
       }} />
         로그인 성공하면 성공했다는 메시지와 함께 이동해주기
         토큰 방식으로 바꾸기
-        {token}
+        {localStorage.getItem("token")}
     </div>
   );
 }
