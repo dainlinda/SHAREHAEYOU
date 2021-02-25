@@ -83,7 +83,7 @@ def login():
         return jsonify(result = "Invalid Params!")
 
 @app.route('/protected', methods=['GET'])
-@jwt_required
+@jwt_required()
 def protected():
     # Access the identity of the current user with get_jwt_identity
     current_user = get_jwt_identity()
@@ -92,10 +92,10 @@ def protected():
 # @jwt_required는 헤더로 수신한 Access 토큰의 유효성을 검증하는 데코레이터이다. 만약 만료 되었거나 유효하지 않은 토큰이라면 인가받지 못했다는 리턴을 확인할 수 있을 것이다.
 # get_jwt_identity() 메서드는 현재 유효한 토큰임을 확인했기 때문에 서명된 사용자 이름을 찾을 수 있을 것이다. 그 사용자 이름 즉 식별자 identity를 반환하는 함수이다.
 
-@app.route('/logout', methods=["GET"])
-def logout():
-    session.clear()
-    return jsonify(status = "success")
+# @app.route('/logout', methods=["GET"])
+# def logout():
+#     session.clear()
+#     return jsonify(status = "success")
 
 if __name__ == '__main__':
     app.run(debug=True)

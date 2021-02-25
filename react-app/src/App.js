@@ -8,6 +8,7 @@ import { Mine } from './components/Mine';
 import { Login } from './components/Login';
 import { Signup } from './components/Signup';
 import { Logout } from './components/Logout';
+import { Vip } from './components/Vip';
 
 function App() {
   return (
@@ -29,6 +30,9 @@ function App() {
           <li>
             <Link to="/mine">내 포트폴리오 CRUD</Link>
           </li>
+          <li>
+            <Link to="/vip">vip 접근가능구역</Link>
+          </li>
         </ul>
         <Switch>
           <Route exact path="/" component={Home}></Route>
@@ -36,6 +40,7 @@ function App() {
           <Route exact path="/login" component={Login}></Route>
           <Route exact path="/logout" component={Logout}></Route>
           <Route exact path="/mine" component={Mine}></Route>
+          <Route exact path="/vip" component={Vip}></Route>
         </Switch>
       </BrowserRouter>
     </div>
