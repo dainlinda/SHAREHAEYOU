@@ -3,6 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { Button } from 'react-bootstrap';
+import axios from 'axios';
 
 //https://www.npmjs.com/package/react-datepicker
 import DatePicker from 'react-datepicker';
@@ -12,7 +13,15 @@ export function Mine() {
   return (
     <div>
       <h1>내 포트폴리오 보기</h1>
-      <Education />
+      <Education onCreate={function (data) { 
+        axios.post(`http://127.0.0.1:5000/education`, data, {
+          headers:{
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
+        }); 
+      }
+        }  
+        />
       <Awards />
       <Projects />
       <Certificates />
@@ -21,9 +30,21 @@ export function Mine() {
 }
 // https://react-bootstrap.github.io/components/accordion/ 플러스 버튼 이걸로 구현
 
-function Education(){
+function Education(props){
   return (
-    <Form>
+    <Form
+          action=""
+          method="post"
+          onSubmit={function (e) {
+            e.preventDefault();
+            props.onCreate({
+              college: e.target.college.value,
+              major: e.target.major.value,
+              degree: e.target.formHorizontalRadios.value
+            });
+            e.target.reset();
+          }}
+    >
       <h3>학력</h3>
       <article>
       - 학력: 학교이름, 전공 정보를 text 형식으로 입력받습니다.  
@@ -55,37 +76,38 @@ function Education(){
               label="재학중"
               name="formHorizontalRadios"
               id="formHorizontalRadios1"
+              value="1"
             />
             <Form.Check
               type="radio"
               label="학사졸업"
               name="formHorizontalRadios"
               id="formHorizontalRadios2"
+              value="2"
             />
             <Form.Check
               type="radio"
               label="석사졸업"
               name="formHorizontalRadios"
               id="formHorizontalRadios3"
+              value="3"
             />
             <Form.Check
               type="radio"
               label="박사졸업"
               name="formHorizontalRadios"
               id="formHorizontalRadios4"
+              value="4"
             />
           </Col>
         </Form.Group>
       </fieldset>
-      <Form.Group as={Row} controlId="formHorizontalCheck">
-        <Col sm={{ span: 10, offset: 2 }}>
-          <Form.Check label="추가?" />
-        </Col>
-      </Form.Group>
 
       <Form.Group as={Row}>
         <Col sm={{ span: 10, offset: 2 }}>
-          <Button type="submit">버튼</Button>
+          <Button variant="primary" type="submit">
+            저장
+          </Button>
         </Col>
       </Form.Group>
     </Form>
