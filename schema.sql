@@ -3,6 +3,7 @@ create table if not exists user(
     fullname varchar(32) not null,
     email varchar(64) not null,
     password varchar(128) not null,
+  
     primary key(id),
     unique(email)
 );
@@ -13,6 +14,7 @@ create table if not exists userInfo(
     image_path VARCHAR (255) NOT NULL,
     introduction text,
     user_id int not null,
+ 
     primary key (id),
     foreign key (user_id) references user(id)
 );
@@ -24,6 +26,7 @@ create table if not exists education(
     major varchar(64) not null,
     degree tinyint not null,
     user_id int not null,
+
     primary key (id),
     foreign key (user_id) references user(id)
 );
@@ -34,6 +37,7 @@ create table if not exists awards(
     award varchar(64) not null,
     detail text,
     user_id int not null,
+
     primary key (id),
     foreign key (user_id) references user(id)
 );
@@ -46,6 +50,7 @@ create table if not exists projects(
     start_date date,
     end_date date,
     user_id int not null,
+
     primary key (id),
     foreign key (user_id) references user(id)
 );
@@ -56,6 +61,7 @@ create table if not exists certificates(
     detail text,
     get_date date,
     user_id int not null,
+  
     primary key (id),
     foreign key (user_id) references user(id)
 );

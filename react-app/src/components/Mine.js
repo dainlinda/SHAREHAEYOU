@@ -22,9 +22,33 @@ export function Mine() {
       }
         }  
         />
-      <Awards />
-      <Projects />
-      <Certificates />
+      <Awards onCreate={function (data) { 
+        axios.post(`http://127.0.0.1:5000/awards`, data, {
+          headers:{
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
+        }); 
+      }
+        }  
+        />
+      <Projects onCreate={function (data) { 
+        axios.post(`http://127.0.0.1:5000/projects`, data, {
+          headers:{
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
+        }); 
+      }
+        }  
+        />
+        <Certificates onCreate={function (data) { 
+        axios.post(`http://127.0.0.1:5000/certificates`, data, {
+          headers:{
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
+        }); 
+      }
+        }  
+        />
     </div>
   );
 }
@@ -114,9 +138,20 @@ function Education(props){
   );
 }
 
-function Awards(){
+function Awards(props){
   return (
-    <Form>
+    <Form
+    action=""
+    method="post"
+    onSubmit={function (e) {
+      e.preventDefault();
+      props.onCreate({
+        award: e.target.award.value,
+        detail: e.target.awardDetail.value
+      });
+      e.target.reset();
+    }}
+>
       <h3>수상이력</h3>
       <article>
       - 수상 이력: 수상 내역과 상세내역을 text 형식으로 입력받습니다.
@@ -137,46 +172,44 @@ function Awards(){
         </Col>
       </Form.Group>
 
-      <Form.Group as={Row} controlId="formHorizontalCheck">
-        <Col sm={{ span: 10, offset: 2 }}>
-          <Form.Check label="추가?" />
-        </Col>
-      </Form.Group>
-
       <Form.Group as={Row}>
         <Col sm={{ span: 10, offset: 2 }}>
-          <Button type="submit">버튼</Button>
+          <Button variant="primary" type="submit">
+            저장
+          </Button>
         </Col>
       </Form.Group>
     </Form>
   );
 }
-function Twodate(){
+function formDate(){ //날짜형식 yyyy-mm-dd로 바꿔주기
+  var date = new Date();
+  var year = date.getFullYear();
+  var month = ("0" + (1 + date.getMonth())).slice(-2);
+  var day = ("0" + date.getDate()).slice(-2);
+
+  return year + "-" + month + "-" + day;
+}
+
+function Projects(props){
   const [startDate, setStartDate] = useState(new Date("2021/02/24"));
   const [endDate, setEndDate] = useState(new Date("2021/02/24"));
-      return (
-        <>
-          <DatePicker
-            selected={startDate}
-            onChange={date => setStartDate(date)}
-            selectsStart
-            startDate={startDate}
-            endDate={endDate}
-          />
-          <DatePicker
-            selected={endDate}
-            onChange={date => setEndDate(date)}
-            selectsEnd
-            startDate={startDate}
-            endDate={endDate}
-            minDate={startDate}
-          />
-        </>
-      );
-}
-function Projects(){
+  console.log(formDate(startDate));
   return (
-    <Form>
+    <Form
+          action=""
+          method="post"
+          onSubmit={function (e) {
+            e.preventDefault();
+            props.onCreate({
+              project: e.target.project.value,
+              detail: e.target.projectDetail.value,
+              startDate: formDate(startDate),
+              endDate: formDate(endDate)
+            });
+            e.target.reset();
+          }}
+    >
       <h3>프로젝트</h3>
       <article>
       - 프로젝트: 프로젝트 이름과 상세내역을 txt 형식으로 입력받습니다. 
@@ -198,27 +231,39 @@ function Projects(){
         </Col>
       </Form.Group>
 
-      <Twodate />
-
-      <Form.Group as={Row} controlId="formHorizontalCheck">
-        <Col sm={{ span: 10, offset: 2 }}>
-          <Form.Check label="추가?" />
-        </Col>
-      </Form.Group>
+      <DatePicker selected={startDate} onChange={date => setStartDate(date)} />
+      <DatePicker 
+        selected={endDate} 
+        onChange={date => setEndDate(date)} 
+        minDate={startDate}/>
 
       <Form.Group as={Row}>
         <Col sm={{ span: 10, offset: 2 }}>
-          <Button type="submit">버튼</Button>
+          <Button variant="primary" type="submit">
+            저장
+          </Button>
         </Col>
       </Form.Group>
     </Form>
   );
 }
 
-function Certificates(){
-  const [cstartDate, setCstartDate] = useState(new Date());
+function Certificates(props){
+  const [startDate, setStartDate] = useState(new Date());
   return (
-    <Form>
+    <Form
+          action=""
+          method="post"
+          onSubmit={function (e) {
+            e.preventDefault();
+            props.onCreate({
+              certificate: e.target.certificate.value,
+              organization: e.target.organization.value,
+              get_date: formDate(startDate)
+            });
+            e.target.reset();
+          }}
+    >
       <h3>자격증</h3>
       <article>
       - 자격증: 자격증 이름, 공급기관을 text 형식으로 입력받습니다. 
@@ -241,18 +286,13 @@ function Certificates(){
       </Form.Group>
 
       <h6>취득일</h6>
-      <DatePicker selected={cstartDate} 
-      onChange={date => setCstartDate(date)} />
-
-      <Form.Group as={Row} controlId="formHorizontalCheck">
-        <Col sm={{ span: 10, offset: 2 }}>
-          <Form.Check label="추가?" />
-        </Col>
-      </Form.Group>
+      <DatePicker selected={startDate} onChange={date => setStartDate(date)} />
 
       <Form.Group as={Row}>
         <Col sm={{ span: 10, offset: 2 }}>
-          <Button type="submit">버튼</Button>
+          <Button variant="primary" type="submit">
+            저장
+          </Button>
         </Col>
       </Form.Group>
     </Form>
