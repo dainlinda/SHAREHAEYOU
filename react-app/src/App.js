@@ -9,6 +9,7 @@ import { Login } from './components/Login';
 import { Signup } from './components/Signup';
 import { Logout } from './components/Logout';
 import { Vip } from './components/Vip';
+import HistorySample from './components/HistorySample';
 
 function App() {
   return (
@@ -33,6 +34,9 @@ function App() {
           <li>
             <Link to="/vip">vip 접근가능구역</Link>
           </li>
+          <li>
+            <Link to="/history">예제</Link>
+          </li>
         </ul>
         <Switch>
           <Route exact path="/" component={Home}></Route>
@@ -41,6 +45,7 @@ function App() {
           <Route exact path="/logout" component={Logout}></Route>
           <Route exact path="/mine" component={Mine}></Route>
           <Route exact path="/vip" component={Vip}></Route>
+          <Route path="/history" component={HistorySample} />
         </Switch>
       </BrowserRouter>
     </div>

@@ -77,7 +77,7 @@ def login():
         # session.clear()
         # session['email'] = user['email']
         # return jsonify(status = "success", result = {"email": args["email"]})
-        access_token = create_access_token(identity=user['email'])
+        access_token = create_access_token(identity=user['id'])
         return jsonify(status = "success", access_token=access_token)
     else: #아이디, 비밀번호가 일치하지 않는 경우
         return jsonify(result = "Invalid Params!")
