@@ -98,5 +98,62 @@ def protected():
 #     session.clear()
 #     return jsonify(status = "success")
 
+
+"""
+Education APIs - 학력 CRUD
+
+Create API : 학교이름(college), 전공(major), 학위(degree) 정보를 입력받습니다.
+Read API : 이미 저장되어 있는 학력 내용을 가져옵니다.
+Update API : 이미 저장되어 있는 정보를 변경합니다.
+Delete API : 특정 학력을 제거합니다.
+"""
+parser.add_argument('college')
+parser.add_argument('major')
+parser.add_argument('degree')
+parser.add_argument('id')
+
+class Education(Resource):
+    @jwt_required()
+    def get(self):
+        args = parser.parse_args()     
+        sql = "SELECT * FROM `education` WHERE user_id = (%s)"
+        cursor.execute(sql, (args["id"]))
+        result = cursor.fetchall()
+        return jsonify(status = "success", result = result)
+
+    @jwt_required()    
+    def post(self):
+        current_user = get_jwt_identity()
+        args = parser.parse_args()
+        sql = "INSERT INTO `education` (`college`,`major`,`degree`,`user_id`) \
+            VALUES (%s,%s,%s,%s)"
+        cursor.execute(sql, (args["college"],args["major"],args["degree"],current_user['id']))
+        db.commit()
+        
+        return jsonify(status = "success", result = {"college": args["college"]})
+    
+    @jwt_required()    
+    def put(self):
+        current_user = get_jwt_identity()
+        args = parser.parse_args()
+        sql = "UPDATE `education` SET college = %s, major = %s, degree = %s WHERE `id` = %s AND `user_id` = %s"
+        cursor.execute(sql, (args["college"],args["major"],args["degree"], args["id"], current_user['id']))
+        db.commit()
+        
+        return jsonify(status = "success", result = {"id": args["id"], "name": args["college"]})
+    
+    @jwt_required()
+    def delete(self):
+        current_user = get_jwt_identity()
+        args = parser.parse_args()
+        sql = "DELETE FROM `education` WHERE `id` = %s AND `user_id` = %s"
+        cursor.execute(sql, (args["id"], current_user['id']))
+        db.commit()
+        
+        return jsonify(status = "success", result = {"id": args["id"]})
+
+
+api.add_resource(Education, '/education')
+
 if __name__ == '__main__':
     app.run(debug=True)
