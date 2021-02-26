@@ -10,15 +10,22 @@ export function Vip() {
         }
     })
         .then(response=>{
-            setVip(response.data.logged_in_as);
+            setVip(response.data.logged_in_as.name);
             
             console.log(response);
         });
     },[]);
-
-  return (
-    <div>
-      {vip}님의 접속을 환영합니다
-    </div>
-  );
+  if(vip){
+    return (
+      <div>
+        {vip}님의 접속을 환영합니다
+      </div>
+    );
+  } else {
+      return (
+        <div>
+          당신은 환영 받지 못했습니다....로그인 후 다시 오시길...
+        </div>
+      );
+    }
 }

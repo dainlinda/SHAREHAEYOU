@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export function Logout() {
+export function Logout({ history }) {
   // session 방식
   // useEffect(() => {
   //   axios.get(`http://127.0.0.1:5000/logout`)
@@ -10,10 +10,13 @@ export function Logout() {
   //   setTmp(response.data);
   // });
   // },[])
-  localStorage.removeItem("token")
-  return (
-    <div>
-      로그아웃 성공여부 띄워주기
-    </div>
+  useEffect(()=>{
+    localStorage.removeItem("token");
+    alert('성공적으로 로그아웃 되었습니다.');
+    history.push('/'); //홈으로  
+  }, [])
+  return(
+    <>
+    </>
   );
 }

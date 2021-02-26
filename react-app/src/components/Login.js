@@ -3,8 +3,7 @@ import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 
-export function Login() {
-  
+export function Login({ history }) {    
   return (
     <div>
       <h1>로그인</h1>
@@ -14,10 +13,9 @@ export function Login() {
             console.log(response);
             localStorage.setItem("token", (response.data.access_token));
           });
+          history.push('/'); //홈으로
       }} />
         로그인 성공하면 성공했다는 메시지와 함께 이동해주기
-        토큰 방식으로 바꾸기
-        {localStorage.getItem("token")}
     </div>
   );
 }
