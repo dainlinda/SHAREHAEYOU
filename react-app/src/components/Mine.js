@@ -2,59 +2,151 @@ import React, { Component, useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import { Button } from 'react-bootstrap';
+import { Button, ListGroup } from 'react-bootstrap';
 import axios from 'axios';
 
 //https://www.npmjs.com/package/react-datepicker
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
-export function Mine() {
-  return (
-    <div>
-      <h1>내 포트폴리오 보기</h1>
-      <Education onCreate={function (data) { 
-        axios.post(`http://127.0.0.1:5000/education`, data, {
-          headers:{
-            Authorization: "Bearer " + localStorage.getItem("token")
-          }
-        }); 
-      }
-        }  
-        />
-      <Awards onCreate={function (data) { 
-        axios.post(`http://127.0.0.1:5000/awards`, data, {
-          headers:{
-            Authorization: "Bearer " + localStorage.getItem("token")
-          }
-        }); 
-      }
-        }  
-        />
-      <Projects onCreate={function (data) { 
-        axios.post(`http://127.0.0.1:5000/projects`, data, {
-          headers:{
-            Authorization: "Bearer " + localStorage.getItem("token")
-          }
-        }); 
-      }
-        }  
-        />
-        <Certificates onCreate={function (data) { 
-        axios.post(`http://127.0.0.1:5000/certificates`, data, {
-          headers:{
-            Authorization: "Bearer " + localStorage.getItem("token")
-          }
-        }); 
-      }
-        }  
-        />
-    </div>
-  );
-}
-// https://react-bootstrap.github.io/components/accordion/ 플러스 버튼 이걸로 구현
+export function Mine({history}){
+  const [mode, setMode] = useState('READ');
+  const token = localStorage.getItem("token");
+  const [edu,setEdu] = useState([]);
+  const [selectedId, setSelectedId] = useState();
+  const [index, setIndex] = useState();
 
-function Education(props){
+  useEffect(()=>{
+    axios.get(`http://127.0.0.1:5000/education`, {
+      headers:{
+        Authorization: "Bearer " + localStorage.getItem("token")
+      }
+    })
+    .then(response=>{
+      console.log('education:',response);
+      setEdu(response.data.result);
+    });
+  }, []);
+  function degreeChange(degree){
+    if(Number(degree) === 1){
+      return "재학중"
+    } else if(Number(degree) === 2){
+      return "학사졸업"
+    } else if(Number(degree) === 3){
+      return "석사졸업"
+    } else if(Number(degree) === 4){
+      return "박사졸업"
+    }
+  }
+  if(token){
+    if(mode === 'READ'){
+      const education = edu.map((item, index)=>
+        <li key={index}>
+          {item.id}
+          <h5>{item.college}</h5>
+          <h6>{item.major}({degreeChange(item.degree)})</h6>
+          <p><a 
+          href="/" 
+          onClick={
+            function(e){
+              e.preventDefault();
+              setMode('UPDATE'); //기능 유예
+              setSelectedId(Number(item.id));
+              setIndex(Number(index));
+            }
+          }>Edit</a></p>
+          <a 
+          href="/" 
+          onClick={
+            function(e){
+              e.preventDefault();
+              setMode('DELETE'); 
+              setSelectedId(Number(item.id));
+            }
+          }>Delete</a>
+        </li>
+      ); 
+    return (
+        <div>
+          <ListGroup>
+            <ListGroup.Item>
+              <h2>학력</h2>
+              <ul>
+                {education}
+              </ul>
+              
+              <Button variant="primary"
+                onClick={
+                  function(e){
+                    e.preventDefault();
+                    setMode('CREATE');
+                  }
+                }>
+                +
+              </Button>
+            </ListGroup.Item>
+          </ListGroup>
+        </div>
+      );
+    } else if (mode === 'CREATE'){
+      return (
+        <div>
+          <h1>내 포트폴리오 보기</h1>
+          <EducationForm onCreate={function (data) { 
+            axios.post(`http://127.0.0.1:5000/education`, data, {
+              headers:{
+                Authorization: "Bearer " + localStorage.getItem("token")
+              }
+            });
+            // history.push('/mine'); 
+          }
+            } 
+            data = {{college: "",major:"",degree:""}} 
+            />
+
+        </div>
+      );
+    } else if(mode === 'DELETE'){
+      console.log('delete:',selectedId);
+      axios.delete(`http://127.0.0.1:5000/education`, {
+        data:{id: selectedId},
+        headers:{
+          Authorization: "Bearer " + localStorage.getItem("token")
+      }
+    }).then(response=>console.log(response));
+      setMode('READ');
+      window.location.reload();
+    } else if(mode === 'UPDATE') {
+      console.log('update:', edu[index].college);
+      return (
+        <div>
+          <h1>내 포트폴리오 수정</h1>
+          <EducationForm onCreate={function (data) { 
+            axios.put(`http://127.0.0.1:5000/education`, data, {
+              headers:{
+                Authorization: "Bearer " + localStorage.getItem("token")
+              }
+            });
+            // history.push('/mine'); 
+          }
+            }  
+            data = {edu[index]}
+            />
+
+        </div>
+      );
+    }
+  } else {
+    return (
+      <div>
+        로그인이나 하고 오시지 애송이!
+      </div>
+    );
+  }
+}
+
+
+function EducationForm(props){
   return (
     <Form
           action=""
@@ -78,7 +170,7 @@ function Education(props){
         <Form.Label column sm={2}>
         </Form.Label>
         <Col sm={10}>
-          <Form.Control name="college" placeholder="학교이름" />
+          <Form.Control name="college" placeholder="학교이름" value={props.data.college} />
         </Col>
       </Form.Group>
 
@@ -86,7 +178,7 @@ function Education(props){
         <Form.Label column sm={2}>
         </Form.Label>
         <Col sm={10}>
-          <Form.Control name="major" placeholder="전공" />
+          <Form.Control name="major" placeholder="전공" value={props.data.major} />
         </Col>
       </Form.Group>
       <fieldset>
@@ -138,7 +230,7 @@ function Education(props){
   );
 }
 
-function Awards(props){
+function AwardsForm(props){
   return (
     <Form
     action=""
@@ -191,7 +283,7 @@ function formDate(){ //날짜형식 yyyy-mm-dd로 바꿔주기
   return year + "-" + month + "-" + day;
 }
 
-function Projects(props){
+function ProjectsForm(props){
   const [startDate, setStartDate] = useState(new Date("2021/02/24"));
   const [endDate, setEndDate] = useState(new Date("2021/02/24"));
   console.log(formDate(startDate));
@@ -248,7 +340,7 @@ function Projects(props){
   );
 }
 
-function Certificates(props){
+function CertificatesForm(props){
   const [startDate, setStartDate] = useState(new Date());
   return (
     <Form
@@ -273,7 +365,7 @@ function Certificates(props){
         <Form.Label column sm={2}>
         </Form.Label>
         <Col sm={10}>
-          <Form.Control type="certificate" placeholder="자격증이름" />
+          <Form.Control name="certificate" placeholder="자격증이름" />
         </Col>
       </Form.Group>
 
@@ -281,7 +373,7 @@ function Certificates(props){
         <Form.Label column sm={2}>
         </Form.Label>
         <Col sm={10}>
-          <Form.Control type="organization" placeholder="발급기관" />
+          <Form.Control name="organization" placeholder="발급기관" />
         </Col>
       </Form.Group>
 
@@ -298,3 +390,60 @@ function Certificates(props){
     </Form>
   );
 }
+
+
+
+
+// export function Mine() {
+//   if(localStorage.getItem("token")){
+//     return (
+//       <div>
+//         <h1>내 포트폴리오 보기</h1>
+//         <EducationForm onCreate={function (data) { 
+//           axios.post(`http://127.0.0.1:5000/Education`, data, {
+//             headers:{
+//               Authorization: "Bearer " + localStorage.getItem("token")
+//             }
+//           }); 
+//         }
+//           }  
+//           />
+//         <AwardsForm onCreate={function (data) { 
+//           axios.post(`http://127.0.0.1:5000/awards`, data, {
+//             headers:{
+//               Authorization: "Bearer " + localStorage.getItem("token")
+//             }
+//           }); 
+//         }
+//           }  
+//           />
+//         <ProjectsForm onCreate={function (data) { 
+//           axios.post(`http://127.0.0.1:5000/projects`, data, {
+//             headers:{
+//               Authorization: "Bearer " + localStorage.getItem("token")
+//             }
+//           }); 
+//         }
+//           }  
+//           />
+//           <CertificatesForm onCreate={function (data) { 
+//           axios.post(`http://127.0.0.1:5000/certificates`, data, {
+//             headers:{
+//               Authorization: "Bearer " + localStorage.getItem("token")
+//             }
+//           }); 
+//         }
+//           }  
+//           />
+//       </div>
+//     );
+//   } else {
+//     return (
+//       <div>
+//         로그인이나 하고 오시지 애송이!
+//       </div>
+//     );
+//   }
+
+// }
+// // https://react-bootstrap.github.io/components/accordion/ 플러스 버튼 이걸로 구현

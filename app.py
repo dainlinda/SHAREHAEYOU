@@ -48,9 +48,6 @@ parser.add_argument('fullname')
 parser.add_argument('email')
 parser.add_argument('password')
 
-# session을 위한 secret_key 설정-------------------------
-# app.config.from_mapping(SECRET_KEY='dev')
-
 # 토큰 생성에 사용될 Secret Key를 flask 환경 변수에 등록
 app.config.update(
 			DEBUG = True,
@@ -75,9 +72,6 @@ def login():
     cursor.execute(sql, (args['email'],))
     user = cursor.fetchone()  
     if check_password_hash(user['password'], args['password']):
-        # session.clear()
-        # session['email'] = user['email']
-        # return jsonify(status = "success", result = {"email": args["email"]})
         token_identity = {'id': user['id'], 'name': user['fullname'], 'email':user['email']}
         access_token = create_access_token(identity=token_identity)
         return jsonify(status = "success", access_token=access_token)
@@ -93,12 +87,6 @@ def protected():
     return jsonify(logged_in_as=current_user)
 # @jwt_required는 헤더로 수신한 Access 토큰의 유효성을 검증하는 데코레이터이다. 만약 만료 되었거나 유효하지 않은 토큰이라면 인가받지 못했다는 리턴을 확인할 수 있을 것이다.
 # get_jwt_identity() 메서드는 현재 유효한 토큰임을 확인했기 때문에 서명된 사용자 이름을 찾을 수 있을 것이다. 그 사용자 이름 즉 식별자 identity를 반환하는 함수이다.
-
-# @app.route('/logout', methods=["GET"])
-# def logout():
-#     session.clear()
-#     return jsonify(status = "success")
-
 
 """
 Education APIs - 학력 CRUD
@@ -116,9 +104,10 @@ parser.add_argument('id')
 class Education(Resource):
     @jwt_required()
     def get(self):
-        args = parser.parse_args()     
+        current_user = get_jwt_identity() # 나중에 바꿔줘야함
+        # args = parser.parse_args()     
         sql = "SELECT * FROM `education` WHERE user_id = (%s)"
-        cursor.execute(sql, (args["id"]))
+        cursor.execute(sql, (current_user['id'])) #args["id"]
         result = cursor.fetchall()
         return jsonify(status = "success", result = result)
 
@@ -309,7 +298,7 @@ class Certificates(Resource):
         cursor.execute(sql, (args["certificate"],args["organization"],args["get_date"],args["id"], current_user['id']))
         db.commit()
         
-        return jsonify(status = "success", result = {"id": args["id"], "project": args["project"]})
+        return jsonify(status = "success", result = {"id": args["id"], "certificate": args["certificate"]})
     
     @jwt_required()
     def delete(self):

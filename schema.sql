@@ -58,7 +58,7 @@ create table if not exists projects(
 create table if not exists certificates(
     id int not null AUTO_INCREMENT,
     certificate varchar(64) not null,
-    detail text,
+    organization text,
     get_date date,
     user_id int not null,
   
