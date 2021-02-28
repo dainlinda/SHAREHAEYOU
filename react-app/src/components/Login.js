@@ -13,10 +13,10 @@ export function Login({ history }) {
             console.log(response);
             localStorage.setItem("token", (response.data.access_token));
             history.push('/'); //홈으로
+            window.location.reload();
           });
-          window.location.reload();
+          
       }} />
-        로그인 성공하면 성공했다는 메시지와 함께 이동해주기
     </div>
   );
 }

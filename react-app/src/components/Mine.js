@@ -9,13 +9,21 @@ import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
+//컴포넌트 분리하기-------------------------------------------------------------
 export function Mine({history}){
   const [mode, setMode] = useState('READ');
   const token = localStorage.getItem("token");
+
+  //전체 글 받아오는 용
   const [edu,setEdu] = useState([]);
+
+  //delete, update에서 어떤 article 클릭됐는지 파악
   const [selectedId, setSelectedId] = useState();
+
+  //update에서 특정 article id 받아오는 용
   const [index, setIndex] = useState();
 
+  //학력 정보 받아오는 함수
   useEffect(()=>{
     axios.get(`http://127.0.0.1:5000/education`, {
       headers:{
@@ -27,6 +35,8 @@ export function Mine({history}){
       setEdu(response.data.result);
     });
   }, []);
+  
+  //학위 숫자->글자 변환해주는 함수
   function degreeChange(degree){
     if(Number(degree) === 1){
       return "재학중"
@@ -38,43 +48,44 @@ export function Mine({history}){
       return "박사졸업"
     }
   }
+
+  //받아온 학력정보 html 형태로 바꿔줌
+  const education = edu.map((item, index)=>
+  <li key={index}>
+    <h5>{item.college}</h5>
+    <h6>{item.major}({degreeChange(item.degree)})</h6>
+    <a 
+    href="/" 
+    onClick={
+      function(e){
+        e.preventDefault();
+        setMode('UPDATE'); //기능 유예
+        setSelectedId(Number(item.id));
+        setIndex(Number(index));
+      }
+    }>Edit</a>/ 
+    <a 
+    href="/" 
+    onClick={
+      function(e){
+        e.preventDefault();
+        setMode('DELETE'); 
+        setSelectedId(Number(item.id));
+      }
+    }>Delete</a>
+  </li>
+  );
+  //이 부분 로그인 안하면 메뉴 안보이게 해서 지워도 됨
   if(token){
+    //read, create, update 윗부분 컴포넌트화하기
     if(mode === 'READ'){
-      const education = edu.map((item, index)=>
-        <li key={index}>
-          {item.id}
-          <h5>{item.college}</h5>
-          <h6>{item.major}({degreeChange(item.degree)})</h6>
-          <p><a 
-          href="/" 
-          onClick={
-            function(e){
-              e.preventDefault();
-              setMode('UPDATE'); //기능 유예
-              setSelectedId(Number(item.id));
-              setIndex(Number(index));
-            }
-          }>Edit</a></p>
-          <a 
-          href="/" 
-          onClick={
-            function(e){
-              e.preventDefault();
-              setMode('DELETE'); 
-              setSelectedId(Number(item.id));
-            }
-          }>Delete</a>
-        </li>
-      ); 
     return (
-        <div>
           <ListGroup>
             <ListGroup.Item>
               <h2>학력</h2>
               <ul>
                 {education}
               </ul>
-              
               <Button variant="primary"
                 onClick={
                   function(e){
@@ -86,12 +97,15 @@ export function Mine({history}){
               </Button>
             </ListGroup.Item>
           </ListGroup>
-        </div>
       );
-    } else if (mode === 'CREATE'){
+    } else if (mode === 'CREATE'){ 
       return (
-        <div>
-          <h1>내 포트폴리오 보기</h1>
+        <ListGroup>
+          <ListGroup.Item>
+           <h2>학력</h2>
+           <ul>
+            {education}
+          </ul>
           <EducationForm onCreate={function (data) { 
             axios.post(`http://127.0.0.1:5000/education`, data, {
               headers:{
@@ -101,10 +115,19 @@ export function Mine({history}){
             // history.push('/mine'); 
           }
             } 
-            data = {{college: "",major:"",degree:""}} 
+            data = {{college: "",major:""}} 
             />
-
-        </div>
+          <Button variant="primary"
+            onClick={
+              function(e){
+                e.preventDefault();
+                setMode('CREATE');
+              }
+            }>
+            +
+          </Button>
+        </ListGroup.Item>
+      </ListGroup>        
       );
     } else if(mode === 'DELETE'){
       console.log('delete:',selectedId);
@@ -117,23 +140,39 @@ export function Mine({history}){
       setMode('READ');
       window.location.reload();
     } else if(mode === 'UPDATE') {
-      console.log('update:', edu[index].college);
+      // console.log('update:', edu[index].college);
       return (
-        <div>
-          <h1>내 포트폴리오 수정</h1>
-          <EducationForm onCreate={function (data) { 
-            axios.put(`http://127.0.0.1:5000/education`, data, {
-              headers:{
-                Authorization: "Bearer " + localStorage.getItem("token")
-              }
-            });
-            // history.push('/mine'); 
-          }
-            }  
-            data = {edu[index]}
-            />
-
-        </div>
+        
+        <ListGroup>
+            <ListGroup.Item>
+              <h2>학력</h2>
+              <ul>
+                {education}
+              </ul>
+            <EducationForm onCreate={function (data) { 
+              data.id=selectedId;
+              axios.put(`http://127.0.0.1:5000/education`, data, {
+                headers:{
+                  Authorization: "Bearer " + localStorage.getItem("token")
+                }
+              });
+              console.log(data);
+              // history.push('/mine'); 
+            }
+              }  
+              data={edu[index]}
+              />
+              <Button variant="primary"
+                onClick={
+                  function(e){
+                    e.preventDefault();
+                    setMode('CREATE');
+                  }
+                }>
+                +
+              </Button>
+            </ListGroup.Item>
+          </ListGroup>
       );
     }
   } else {
@@ -147,6 +186,10 @@ export function Mine({history}){
 
 
 function EducationForm(props){
+  //update 글씨 받아오는 용
+  const [college, setCollege] = useState(props.data.college);
+  const [major, setMajor] = useState(props.data.major);
+
   return (
     <Form
           action=""
@@ -161,16 +204,15 @@ function EducationForm(props){
             e.target.reset();
           }}
     >
-      <h3>학력</h3>
-      <article>
-      - 학력: 학교이름, 전공 정보를 text 형식으로 입력받습니다.  
-        학위에 대한 사항은 radio button을 통해 입력받습니다.
-      </article>
       <Form.Group as={Row} controlId="formHorizontalCollege">
         <Form.Label column sm={2}>
         </Form.Label>
         <Col sm={10}>
-          <Form.Control name="college" placeholder="학교이름" value={props.data.college} />
+          <Form.Control name="college" placeholder="학교이름" value={college} onChange={
+            (e)=>{
+              setCollege(e.target.value)
+            }
+          }/>
         </Col>
       </Form.Group>
 
@@ -178,7 +220,11 @@ function EducationForm(props){
         <Form.Label column sm={2}>
         </Form.Label>
         <Col sm={10}>
-          <Form.Control name="major" placeholder="전공" value={props.data.major} />
+          <Form.Control name="major" placeholder="전공" value={major} onChange={
+            (e)=>{
+              setMajor(e.target.value)
+            }
+          } />
         </Col>
       </Form.Group>
       <fieldset>
@@ -220,11 +266,12 @@ function EducationForm(props){
       </fieldset>
 
       <Form.Group as={Row}>
-        <Col sm={{ span: 10, offset: 2 }}>
-          <Button variant="primary" type="submit">
+          <Button variant="primary" type="submit" onClick={()=>window.location.reload()}>
             저장
           </Button>
-        </Col>
+          <Button variant="light" onClick={()=>window.location.reload()}>
+            취소
+          </Button>
       </Form.Group>
     </Form>
   );

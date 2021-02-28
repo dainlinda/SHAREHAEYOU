@@ -17,6 +17,8 @@ from flask_jwt_extended import (
 #flask_cors 사용
 from flask_cors import CORS, cross_origin
 
+import datetime
+
 app = Flask(__name__)
 api = Api(app)
 
@@ -55,7 +57,7 @@ app.config.update(
 		)
 # JWT 확장 모듈을 flask 어플리케이션에 등록
 jwt = JWTManager(app)
-
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
 
 @app.route('/signup', methods=["POST"])
 def register():

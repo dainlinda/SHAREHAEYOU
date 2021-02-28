@@ -1,2 +1,4 @@
 myvenv/
 .vscode/
+requirements.txt
+node_modules/
