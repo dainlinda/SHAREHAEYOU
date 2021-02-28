@@ -25,7 +25,7 @@ CORS(app)
 # db 연결
 db = pymysql.connect(
         user = 'root',
-        passwd = '1234',
+        passwd = '',
         host = '127.0.0.1',
         port = 3306,
         db = 'webportfolio',
@@ -146,4 +146,4 @@ class Education(Resource):
 api.add_resource(Education, '/education')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run('0.0.0.0', port=5000,debug=True)
