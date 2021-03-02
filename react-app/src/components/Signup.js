@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
+import * as config from '../config';
 
 export function Signup() {
   return (
     <div>
       <h1>회원가입</h1>
-      <SignupForm onCreate={function (data) { axios.post(`http://127.0.0.1:5000/signup`, data); }} />
+      <SignupForm onCreate={function (data) { axios.post(config.API_HOST +`/signup`, data); }} />
       회원가입 성공하면 로그인 창으로 이동해주기
     </div>
   );

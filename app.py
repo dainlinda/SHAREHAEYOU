@@ -28,7 +28,8 @@ CORS(app)
 # db 연결
 db = pymysql.connect(
         user = 'root',
-        passwd = '1234',
+        passwd = '1234', # local
+        # passwd = '', # azure
         host = '127.0.0.1',
         port = 3306,
         db = 'webportfolio',
@@ -120,9 +121,13 @@ class Education(Resource):
         sql = "INSERT INTO `education` (`college`,`major`,`degree`,`user_id`) \
             VALUES (%s,%s,%s,%s)"
         cursor.execute(sql, (args["college"],args["major"],args["degree"],current_user['id']))
+        # 새로운 방법 적용중----------------------------------------------------------------------
+        sql2 = "SELECT * FROM `education` WHERE user_id = (%s)"
+        cursor.execute(sql2, (current_user['id'])) 
+        result = cursor.fetchall()
         db.commit()
-        
-        return jsonify(status = "success", result = {"college": args["college"]})
+        return jsonify(status = "success", result = result) 
+        # return jsonify(status = "success", result = {"college": args["college"]})
     
     @jwt_required()    
     def put(self):
@@ -130,9 +135,13 @@ class Education(Resource):
         args = parser.parse_args()
         sql = "UPDATE `education` SET college = %s, major = %s, degree = %s WHERE `id` = %s AND `user_id` = %s"
         cursor.execute(sql, (args["college"],args["major"],args["degree"], args["id"], current_user['id']))
+        # 새로운 방법 적용중----------------------------------------------------------------------
+        sql2 = "SELECT * FROM `education` WHERE user_id = (%s)"
+        cursor.execute(sql2, (current_user['id'])) 
+        result = cursor.fetchall()
         db.commit()
-        
-        return jsonify(status = "success", result = {"id": args["id"], "college": args["college"]})
+        return jsonify(status = "success", result = result)   
+        # return jsonify(status = "success", result = {"id": args["id"], "college": args["college"]})
     
     @jwt_required()
     def delete(self):
@@ -315,5 +324,10 @@ class Certificates(Resource):
 
 api.add_resource(Certificates, '/certificates')
 
+# 배포할 때
+# if __name__ == '__main__':
+#     app.run('0.0.0.0', port=5000, debug=True)
+
+# local
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000,debug=True)
+    app.run(debug=True)
