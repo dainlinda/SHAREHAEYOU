@@ -4,16 +4,16 @@ import { ButtonToolbar } from 'react-bootstrap';
 
 //react-router
 import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
-import { Mine } from './components/Mine';
-import { Login } from './components/Login';
-import { Signup } from './components/Signup';
-import { Logout } from './components/Logout';
+import Mine from './components/myportfolio/Mine';
+import Login from './components/user/Login';
+import Signup from './components/user/Signup';
+import Logout from './components/user/Logout';
 import { Vip } from './components/Vip';
 import HistorySample from './components/HistorySample';
 
 function App() {
   const token = localStorage.getItem("token");
-  if(token){
+  if(token){ //로그인 되어 있을 때 메뉴
     return (
       <div>
         <BrowserRouter>
@@ -44,7 +44,7 @@ function App() {
         </BrowserRouter>
       </div>
     );
-  } else {
+  } else { //로그인 안 되어 있을 때 메뉴
     return (
       <div>
         <BrowserRouter>
@@ -79,7 +79,7 @@ function App() {
 }
 
 function Home() {
-  return <div>Home component</div>;
+  return <div>오신 것을 환영합니다! 홈이에요.</div>;
 }
 
 export default App;

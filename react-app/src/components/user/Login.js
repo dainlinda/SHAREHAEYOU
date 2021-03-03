@@ -2,9 +2,9 @@ import React, {useState,useEffect} from 'react';
 import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
-import * as config from '../config';
+import * as config from '../../config';
 
-export function Login({ history }) {    
+export default function Login({ history }) {    
   return (
     <div>
       <h1>로그인</h1>

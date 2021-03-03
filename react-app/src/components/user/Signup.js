@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
-import * as config from '../config';
+import * as config from '../../config';
 
-export function Signup() {
+export default function Signup() {
   return (
     <div>
       <h1>회원가입</h1>
@@ -13,6 +13,7 @@ export function Signup() {
     </div>
   );
 }
+
 function SignupForm(props) {
   //https://dog-developers.tistory.com/109 비밀번호 재사용
   const [password,setPassword] = useState('');
