@@ -1,6 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { Component, useEffect } from 'react';
-
+import React, { useEffect, useState } from 'react';
+import * as config from './config';
+import axios from 'axios';
 
 import {LoginMenu, LogoutMenu } from './Menu';
 
@@ -18,3 +19,24 @@ function App() {
 }
 
 export default App;
+export function Home() {
+  const [user, setUser] = useState();
+    console.
+    useEffect(()=>{
+        axios.get(config.API_HOST, {
+        headers:{
+            Authorization: "Bearer " + localStorage.getItem("token")
+        }
+    })
+        .then(response=>{
+            setUser(response.data.logged_in_as.name);
+            console.log(response);
+        });
+    },[]);
+
+  return (
+    <div>
+      {user}님!!!!! 오늘도 방문해주셨군요! 안목이 뛰어나시네요
+    </div>
+  );
+}

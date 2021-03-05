@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button } from 'react-bootstrap';
+import { Button, Alert } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import * as config from '../../config';
 
-export default function Signup() {
+export default function Signup({history}) {
+  const [signed,setSigned] = useState('');
+  if (signed === 'success'){
+    setSigned('');
+    alert('회원가입 성공!');
+    history.push('/login');
+  }
   return (
     <div>
       <h1>회원가입</h1>
-      <SignupForm onCreate={function (data) { axios.post(config.API_HOST +`/signup`, data); }} />
-      회원가입 성공하면 로그인 창으로 이동해주기
+      <SignupForm onCreate={function (data) { 
+        axios.post(config.API_HOST +`/signup`, data)
+        .then(response=>{setSigned(response.data.status)}); 
+        }} />
     </div>
   );
 }

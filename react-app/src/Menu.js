@@ -7,7 +7,7 @@ import Mine from './components/myportfolio/Mine';
 import Logout from './components/user/Logout';
 // import { Vip } from './components/Vip';
 // import HistorySample from './components/HistorySample';
-// import { Home } from './App';
+import { Home } from './App';
 import Login from './components/user/Login';
 import Signup from './components/user/Signup';
 
@@ -56,6 +56,3 @@ export function LogoutMenu(){
     );
 }
 
-export function Home() {
-    return <div>오신 것을 환영합니다! 홈이에요.</div>;
-  }
