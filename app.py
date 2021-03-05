@@ -66,6 +66,7 @@ def register():
     sql = "INSERT INTO `user` (`fullname`, `email`, `password`) VALUES (%s, %s, %s)"
     cursor.execute(sql, (args['fullname'],args['email'],generate_password_hash(args['password'])))
     db.commit()
+    
     return jsonify(status = "success", result = {"fullname": args["fullname"]})
         
 @app.route('/login', methods=["POST"])
@@ -149,9 +150,13 @@ class Education(Resource):
         args = parser.parse_args()
         sql = "DELETE FROM `education` WHERE `id` = %s AND `user_id` = %s"
         cursor.execute(sql, (args["id"], current_user['id']))
+       # 새로운 방법 적용중----------------------------------------------------------------------
+        sql2 = "SELECT * FROM `education` WHERE user_id = (%s)"
+        cursor.execute(sql2, (current_user['id'])) 
+        result = cursor.fetchall()
         db.commit()
-        
-        return jsonify(status = "success", result = {"id": args["id"]})
+        return jsonify(status = "success", result = result)   
+        # return jsonify(status = "success", result = {"id": args["id"]})
 
 
 api.add_resource(Education, '/education')
@@ -326,8 +331,8 @@ api.add_resource(Certificates, '/certificates')
 
 # 배포할 때
 # if __name__ == '__main__':
-#     app.run('0.0.0.0', port=5000, debug=True)
+#     app.run('0.0.0.0', port=5000, debug=True, threaded=False)
 
 # local
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, threaded=False)

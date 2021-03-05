@@ -86,10 +86,12 @@ export default function Education({ history }) {
               .then(response => {
                 // console.log(response);
                 setEdu(response.data.result); //새로운 방법 적용중
+                setMode('READ');
               });
-            setMode('READ');
+            
           }}
             data={{ college: "", major: "" }} />
+
   } else if (mode === 'DELETE') {
     form = null;
     // console.log('delete:', selectedId);
@@ -98,9 +100,12 @@ export default function Education({ history }) {
       headers: {
         Authorization: "Bearer " + token
       }
-    }).then(response => console.log(response));
-    setMode('READ');
-    window.location.reload(); //고치기--------------------------
+    })
+    .then(response => {
+      setEdu(response.data.result); //새로운 방법 적용중
+      setMode('READ');
+    });
+
   } else if (mode === 'UPDATE') {
     form = <EducationForm onCreate={function (data) {
             data.id = selectedId;
@@ -112,11 +117,12 @@ export default function Education({ history }) {
               .then(response => {
                 // console.log(response);
                 setEdu(response.data.result); //새로운 방법 적용중
+                setMode('READ');
               });
             // console.log(data);
-            setMode('READ');
           }}
             data={edu[index]} />
+
     
   }
   return (
@@ -136,39 +142,7 @@ export default function Education({ history }) {
   </ListGroup.Item>
   );
 }
-// ---------------------------------------------------------
-// function EducationArticle(props){
-//   return(
-//         <ListGroup.Item>
-//           <h2>학력</h2>
-//           <ul>
-//             {props.education}
-//           </ul>
-//             {props.form}
-//           {/* <EducationForm onCreate={function (data) {
-//             axios.post(config.API_HOST + `/education`, data, {
-//               headers: {
-//                 Authorization: "Bearer " + token
-//               }
-//             })
-//               .then(response => {
-//                 console.log(response);
-//                 setEdu(response.data.result); //새로운 방법 적용중
-//               });
-//             // history.push('/mine'); 
-//           }}
-//             data={{ college: "", major: "" }} /> */}
-//           <Button variant="primary"
-//             onClick={function (e) {
-//               e.preventDefault();
-//               setMode('CREATE');
-//             }}>
-//             +
-//         </Button>
-//         </ListGroup.Item>
-//   );
-// }
-//form 형식---------------------------------------------------------------------------------
+
 function EducationForm(props) {
   //update 글씨 받아오는 용
   const [college, setCollege] = useState(props.data.college);
