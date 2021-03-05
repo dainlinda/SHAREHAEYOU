@@ -1,6 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { Component, useEffect } from 'react';
-import { ButtonToolbar } from 'react-bootstrap';
 
 //react-router
 import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
@@ -10,12 +9,14 @@ import Signup from './components/user/Signup';
 import Logout from './components/user/Logout';
 import { Vip } from './components/Vip';
 import HistorySample from './components/HistorySample';
+import Menu from './Menu';
 
 function App() {
   const token = localStorage.getItem("token");
   if(token){ //로그인 되어 있을 때 메뉴
     return (
       <div>
+        <Menu />
         <BrowserRouter>
           <ul>
             <li>
