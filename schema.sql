@@ -11,12 +11,13 @@ create table if not exists user(
 -- 프로필 profile 1:1
 create table if not exists profile(
     id int not null AUTO_INCREMENT,
-    image_path VARCHAR (255) NOT NULL,
+    image_path VARCHAR (255),
     bio text,
     user_id int not null,
  
     primary key (id),
-    foreign key (user_id) references user(id)
+    foreign key (user_id) references user(id),
+    unique(user_id)
 );
 
 -- 학력 education 1:n

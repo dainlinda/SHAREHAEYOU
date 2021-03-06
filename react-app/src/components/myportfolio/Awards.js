@@ -11,7 +11,7 @@ export default function Awards({ history }) {
   const token = localStorage.getItem('token');
 
   //전체 글 받아오는 용
-  const [awar, setAwar] = useState([]);
+  const [award, setAward] = useState([]);
 
   //delete, update에서 어떤 article 클릭됐는지 파악
   const [selectedId, setSelectedId] = useState();
@@ -28,13 +28,13 @@ export default function Awards({ history }) {
     })
       .then(response => {
         console.log('awards:', response);
-        setAwar(response.data.result);
+        setAward(response.data.result);
       });
   }, []);
 
   //받아온 수상정보 html 형태로 바꿔줌
   //윗 부분 read 정보
-  const awards = awar.map((item, index) => <li key={index}>
+  const awards = award.map((item, index) => <li key={index}>
     <h5>{item.award}</h5>
     <h6>{item.detail}</h6>
     <a
@@ -68,7 +68,7 @@ export default function Awards({ history }) {
               }
             })
               .then(response => {
-                setAwar(response.data.result); 
+                setAward(response.data.result); 
                 console.log()
                 setMode('READ');
               });
@@ -86,7 +86,7 @@ export default function Awards({ history }) {
       }
     })
     .then(response => {
-      setAwar(response.data.result); 
+      setAward(response.data.result); 
       setMode('READ');
     });
 
@@ -99,11 +99,11 @@ export default function Awards({ history }) {
               }
             })
               .then(response => {
-                setAwar(response.data.result); 
+                setAward(response.data.result); 
                 setMode('READ');
               });
           }}
-            data={awar[index]} 
+            data={award[index]} 
             setMode={setMode} />
 
     

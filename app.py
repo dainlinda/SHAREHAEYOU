@@ -70,7 +70,7 @@ def register():
     cursor.execute(sql2, (args['email'])) 
     result = cursor.fetchone()
 
-    sql3 = "INSERT INTO `profile` (`image_path`, `bio`, `user_id`) VALUES ('default', 'default', %s)"
+    sql3 = "INSERT INTO `profile` (`image_path`, `bio`, `user_id`) VALUES (null, null, %s)"
     cursor.execute(sql3, (result.get('id')))
 
     db.commit()
@@ -405,22 +405,58 @@ class Profile(Resource):
         # return jsonify(status = "success", result = {"id": args["id"], "certificate": args["certificate"]})
 
 """
-Profile APIs - 다른유저 R
+Users APIs - 다른유저 R
 
-Create API : 이미지(image_path), 소개(bio)를 입력받습니다.
 Read API : 이미 저장되어 있는 프로필 내용을 가져옵니다.
-Update API : 이미 저장되어 있는 정보를 변경합니다.
+
 """
-class Others(Resource):
+class Users(Resource):
     @jwt_required()
     def get(self):
-        sql = "SELECT * FROM `user`"
+        sql = "SELECT * FROM user \
+                INNER JOIN profile \
+                ON user.id = profile.user_id"
         cursor.execute(sql)
         result = cursor.fetchall()
         return jsonify(status = "success", result = result)
 
+api.add_resource(Users, '/users')
 
-api.add_resource(Others, '/others')
+"""
+Users APIs - 다른유저 R
+
+Read API : 이미 저장되어 있는 프로필 내용을 가져옵니다.
+
+"""
+class Usersdetail(Resource):
+    @jwt_required()
+    def get(self,user_id=None):
+        profile = "SELECT user.id,user.fullname,user.email, profile.image_path,profile.bio\
+        FROM user INNER JOIN profile ON user.id = profile.user_id WHERE user_id = %s"
+        cursor.execute(profile, (user_id))
+        result_profile = cursor.fetchall()
+
+        edu = "SELECT * FROM `education` WHERE user_id = %s"
+        cursor.execute(edu, (user_id))
+        result_edu = cursor.fetchall()
+
+        award = "SELECT * FROM `awards` WHERE user_id = %s"
+        cursor.execute(award, (user_id))
+        result_award = cursor.fetchall()
+
+        cert = "SELECT * FROM `certificates` WHERE user_id = %s"
+        cursor.execute(cert, (user_id))
+        result_cert = cursor.fetchall()
+
+        project = "SELECT * FROM `projects` WHERE user_id = %s"
+        cursor.execute(project, (user_id))
+        result_project = cursor.fetchall()
+
+        return jsonify(status = "success", result_edu = result_edu,
+         result_award=result_award, result_cert = result_cert,
+         result_project = result_project, result_profile=result_profile)
+
+api.add_resource(Usersdetail, '/usersdetail/<user_id>')
 
 # 배포할 때
 # if __name__ == '__main__':

@@ -25,10 +25,10 @@ export default function Profile(){
             // console.log(response.data.result);         
         });
     },[]);
-    if(userImg === 'default'){
+    if(!userImg){
         setUserImg('http://asq.kr/Rl5W7DwTbCO5FV');
     }
-    if(userBio === 'default'){
+    if(!userBio){
         setUserBio('Hi! This is Racer!');
     }
     return(
