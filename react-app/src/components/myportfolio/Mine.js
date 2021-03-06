@@ -2,6 +2,8 @@
 import "react-datepicker/dist/react-datepicker.css";
 import Education from './Education';
 import Awards from './Awards';
+import Projects from './Projects';
+
 import { ListGroup } from 'react-bootstrap';
 
 
@@ -10,7 +12,7 @@ export default function Mine(){
         <ListGroup>
             <Education />
             <Awards />
-            
+            <Projects />
         </ListGroup>
     );
 }
