@@ -21,22 +21,24 @@ function App() {
 export default App;
 export function Home() {
   const [user, setUser] = useState();
-    console.
+    console.log(config.API_HOST);
     useEffect(()=>{
-        axios.get(config.API_HOST, {
+        axios.get(config.API_HOST + '/protected', {
         headers:{
             Authorization: "Bearer " + localStorage.getItem("token")
         }
     })
         .then(response=>{
             setUser(response.data.logged_in_as.name);
-            console.log(response);
         });
     },[]);
 
   return (
     <div>
-      {user}님!!!!! 오늘도 방문해주셨군요! 안목이 뛰어나시네요
+      <h1>
+        {user}님!!!!! 오늘도 방문해주셨군요!
+      </h1>
+      <img src= "https://pbs.twimg.com/media/EYEZb15UYAQfWj9.jpg"/>    
     </div>
   );
 }

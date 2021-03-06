@@ -6,8 +6,6 @@ import Row from 'react-bootstrap/Row';
 import { Button, ListGroup } from 'react-bootstrap';
 import axios from 'axios';
 
-//-------------------------------------------------------------
-
 export default function Education({ history }) {
   const [mode, setMode] = useState('READ');
   const token = localStorage.getItem('token');
@@ -73,7 +71,6 @@ export default function Education({ history }) {
   //아랫 부분 form 파트
   let form = null;
 
-  //read, create, update 윗부분 컴포넌트화하기
   if (mode === 'READ') {
     form = null;
   } else if (mode === 'CREATE') {
@@ -84,17 +81,16 @@ export default function Education({ history }) {
               }
             })
               .then(response => {
-                // console.log(response);
-                setEdu(response.data.result); //새로운 방법 적용중
+                setEdu(response.data.result); 
                 setMode('READ');
               });
             
           }}
-            data={{ college: "", major: "" }} />
+            data={{ college: "", major: "" }} 
+            setMode={setMode} />
 
   } else if (mode === 'DELETE') {
     form = null;
-    // console.log('delete:', selectedId);
     axios.delete(config.API_HOST + `/education`, {
       data: { id: selectedId },
       headers: {
@@ -102,7 +98,7 @@ export default function Education({ history }) {
       }
     })
     .then(response => {
-      setEdu(response.data.result); //새로운 방법 적용중
+      setEdu(response.data.result); 
       setMode('READ');
     });
 
@@ -115,13 +111,12 @@ export default function Education({ history }) {
               }
             })
               .then(response => {
-                // console.log(response);
-                setEdu(response.data.result); //새로운 방법 적용중
+                setEdu(response.data.result); 
                 setMode('READ');
               });
-            // console.log(data);
           }}
-            data={edu[index]} />
+            data={edu[index]} 
+            setMode={setMode} />
 
     
   }
@@ -219,7 +214,7 @@ function EducationForm(props) {
         <Button variant="primary" type="submit">
           저장
           </Button>
-        <Button variant="light" onClick={() => window.location.reload()}>
+        <Button variant="light" onClick={()=>{props.setMode('READ')}}>
           취소
           </Button>
       </Form.Group>
