@@ -65,6 +65,14 @@ def register():
     args = parser.parse_args()
     sql = "INSERT INTO `user` (`fullname`, `email`, `password`) VALUES (%s, %s, %s)"
     cursor.execute(sql, (args['fullname'],args['email'],generate_password_hash(args['password'])))
+
+    sql2 = "SELECT id FROM `user` WHERE email = (%s)"
+    cursor.execute(sql2, (args['email'])) 
+    result = cursor.fetchone()
+
+    sql3 = "INSERT INTO `profile` (`image_path`, `bio`, `user_id`) VALUES ('default', 'default', %s)"
+    cursor.execute(sql3, (result.get('id')))
+
     db.commit()
     
     return jsonify(status = "success", result = {"fullname": args["fullname"]})
@@ -308,9 +316,10 @@ parser.add_argument('id')
 class Certificates(Resource):
     @jwt_required()
     def get(self):
-        args = parser.parse_args()     
+        current_user = get_jwt_identity() # 나중에 바꿔줘야함
+        # args = parser.parse_args()            
         sql = "SELECT * FROM `certificates` WHERE user_id = (%s)"
-        cursor.execute(sql, (args["id"]))
+        cursor.execute(sql, (current_user['id'])) #args["id"]
         result = cursor.fetchall()
         return jsonify(status = "success", result = result)
 
@@ -321,9 +330,13 @@ class Certificates(Resource):
         sql = "INSERT INTO `certificates` (`certificate`,`organization`,`get_date`,`user_id`) \
             VALUES (%s,%s,%s,%s)"
         cursor.execute(sql, (args["certificate"],args["organization"],args["get_date"],current_user['id']))
+        # ----------------------------------------------------------------------
+        sql2 = "SELECT * FROM `certificates` WHERE user_id = (%s)"
+        cursor.execute(sql2, (current_user['id'])) 
+        result = cursor.fetchall()
         db.commit()
-        
-        return jsonify(status = "success", result = {"certificate": args["certificate"]})
+        return jsonify(status = "success", result = result) 
+        # return jsonify(status = "success", result = {"certificate": args["certificate"]})
     
     @jwt_required()    
     def put(self):
@@ -331,9 +344,13 @@ class Certificates(Resource):
         args = parser.parse_args()
         sql = "UPDATE `certificates` SET certificate = %s, organization = %s, get_date = %s WHERE `id` = %s AND `user_id` = %s"
         cursor.execute(sql, (args["certificate"],args["organization"],args["get_date"],args["id"], current_user['id']))
+        # ----------------------------------------------------------------------
+        sql2 = "SELECT * FROM `certificates` WHERE user_id = (%s)"
+        cursor.execute(sql2, (current_user['id'])) 
+        result = cursor.fetchall()
         db.commit()
-        
-        return jsonify(status = "success", result = {"id": args["id"], "certificate": args["certificate"]})
+        return jsonify(status = "success", result = result) 
+        # return jsonify(status = "success", result = {"id": args["id"], "certificate": args["certificate"]})
     
     @jwt_required()
     def delete(self):
@@ -341,12 +358,69 @@ class Certificates(Resource):
         args = parser.parse_args()
         sql = "DELETE FROM `certificates` WHERE `id` = %s AND `user_id` = %s"
         cursor.execute(sql, (args["id"], current_user['id']))
+        # ----------------------------------------------------------------------
+        sql2 = "SELECT * FROM `certificates` WHERE user_id = (%s)"
+        cursor.execute(sql2, (current_user['id'])) 
+        result = cursor.fetchall()
         db.commit()
-        
-        return jsonify(status = "success", result = {"id": args["id"]})
+        return jsonify(status = "success", result = result) 
+        # return jsonify(status = "success", result = {"id": args["id"]})
 
 
 api.add_resource(Certificates, '/certificates')
+
+"""
+Profile APIs - 프로필 CRUD
+
+Create API : 이미지(image_path), 소개(bio)를 입력받습니다.
+Read API : 이미 저장되어 있는 프로필 내용을 가져옵니다.
+Update API : 이미 저장되어 있는 정보를 변경합니다.
+"""
+parser.add_argument('image_path')
+parser.add_argument('bio')
+parser.add_argument('id')
+
+class Profile(Resource):
+    @jwt_required()
+    def get(self):
+        current_user = get_jwt_identity() # 나중에 바꿔줘야함
+        # args = parser.parse_args()            
+        sql = "SELECT * FROM `profile` WHERE user_id = (%s)"
+        cursor.execute(sql, (current_user['id'])) #args["id"]
+        result = cursor.fetchall()
+        return jsonify(status = "success", result = result, crnt_user=current_user)
+
+    @jwt_required()    
+    def put(self):
+        current_user = get_jwt_identity()
+        args = parser.parse_args()
+        sql = "UPDATE `profile` SET image_path = %s, bio = %s WHERE `id` = %s AND `user_id` = %s"
+        cursor.execute(sql, (args["image_path"],args["bio"],args["id"], current_user['id']))
+        # ----------------------------------------------------------------------
+        sql2 = "SELECT * FROM `profile` WHERE user_id = (%s)"
+        cursor.execute(sql2, (current_user['id'])) 
+        result = cursor.fetchall()
+        db.commit()
+        return jsonify(status = "success", result = result) 
+        # return jsonify(status = "success", result = {"id": args["id"], "certificate": args["certificate"]})
+
+"""
+Profile APIs - 다른유저 R
+
+Create API : 이미지(image_path), 소개(bio)를 입력받습니다.
+Read API : 이미 저장되어 있는 프로필 내용을 가져옵니다.
+Update API : 이미 저장되어 있는 정보를 변경합니다.
+"""
+class Others(Resource):
+    @jwt_required()
+    def get(self):
+        sql = "SELECT * FROM `user`"
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        return jsonify(status = "success", result = result)
+
+
+api.add_resource(Others, '/others')
 
 # 배포할 때
 # if __name__ == '__main__':

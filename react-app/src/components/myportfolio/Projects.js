@@ -145,9 +145,7 @@ function ProjectsForm(props) {
   //update 글씨 받아오는 용
   const [project, setProject] = useState(props.data.project);
   const [detail, setDetail] = useState(props.data.detail);
-  useEffect(()=>{
-    console.log('startDate',startDate);
-  },[startDate]);
+
   return (
     <Form
       action=""
@@ -160,7 +158,6 @@ function ProjectsForm(props) {
           startDate: formDate(startDate),
           endDate: formDate(endDate)
         });
-        console.log('startDate222222222222222',startDate);
         e.target.reset();
       }}
     >
@@ -185,6 +182,7 @@ function ProjectsForm(props) {
         </Col>
       </Form.Group>
 
+      <h6>프로젝트 기간</h6>
       <DatePicker selected={startDate} onChange={date => setStartDate(date)} />
       <DatePicker
         selected={endDate}
@@ -192,14 +190,12 @@ function ProjectsForm(props) {
         minDate={startDate} />
 
       <Form.Group as={Row}>
-        <Col sm={{ span: 10, offset: 2 }}>
           <Button variant="primary" type="submit">
             저장
           </Button>
           <Button variant="light" onClick={()=>{props.setMode('READ')}}>
           취소
           </Button>
-        </Col>
       </Form.Group>
     </Form>
   );

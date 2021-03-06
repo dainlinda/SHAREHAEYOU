@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useEffect, useState } from 'react';
 import * as config from './config';
 import axios from 'axios';
+import loginplz from './components/user/loginplz.gif'
 
 import {LoginMenu, LogoutMenu } from './Menu';
 
@@ -21,24 +22,37 @@ function App() {
 export default App;
 export function Home() {
   const [user, setUser] = useState();
+  const token = localStorage.getItem("token");
     console.log(config.API_HOST);
     useEffect(()=>{
         axios.get(config.API_HOST + '/protected', {
         headers:{
-            Authorization: "Bearer " + localStorage.getItem("token")
+            Authorization: "Bearer " + token
         }
     })
         .then(response=>{
             setUser(response.data.logged_in_as.name);
         });
     },[]);
+  if(token){
+    return (
+      <div>
+        <h1>
+          {user}님!!!!! 오늘도 방문해주셨군요!
+        </h1>
+        <img src= "https://pbs.twimg.com/media/EYEZb15UYAQfWj9.jpg"/>    
+      </div>
+    );  
+  } else {
+    return (
+      <div>
+        <h1>
+          로그인하고 다시 돌아와라 애송이!!
+        </h1>
+        <img src={loginplz} />
 
-  return (
-    <div>
-      <h1>
-        {user}님!!!!! 오늘도 방문해주셨군요!
-      </h1>
-      <img src= "https://pbs.twimg.com/media/EYEZb15UYAQfWj9.jpg"/>    
-    </div>
-  );
+        {/* <img src="https://upload3.inven.co.kr/upload/2020/12/31/bbs/i014750817864.gif" width='250'/>    */}
+      </div>
+    );  
+  }
 }

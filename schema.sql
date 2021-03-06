@@ -8,11 +8,11 @@ create table if not exists user(
     unique(email)
 );
 
--- 자기정보 userInfo 1:1
-create table if not exists userInfo(
+-- 프로필 profile 1:1
+create table if not exists profile(
     id int not null AUTO_INCREMENT,
     image_path VARCHAR (255) NOT NULL,
-    introduction text,
+    bio text,
     user_id int not null,
  
     primary key (id),
