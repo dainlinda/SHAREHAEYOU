@@ -1,17 +1,27 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button } from 'react-bootstrap';
+import { Button, Alert } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
+import * as config from '../../config';
 
-export function Signup() {
+export default function Signup({history}) {
+  const [signed,setSigned] = useState('');
+  if (signed === 'success'){
+    setSigned('');
+    alert('회원가입 성공!');
+    history.push('/login');
+  }
   return (
     <div>
       <h1>회원가입</h1>
-      <SignupForm onCreate={function (data) { axios.post(`http://127.0.0.1:5000/signup`, data); }} />
-      회원가입 성공하면 로그인 창으로 이동해주기
+      <SignupForm onCreate={function (data) { 
+        axios.post(config.API_HOST +`/signup`, data)
+        .then(response=>{setSigned(response.data.status)}); 
+        }} />
     </div>
   );
 }
+
 function SignupForm(props) {
   //https://dog-developers.tistory.com/109 비밀번호 재사용
   const [password,setPassword] = useState('');

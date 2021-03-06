@@ -2,13 +2,14 @@ import React, {useState,useEffect} from 'react';
 import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
+import * as config from '../../config';
 
-export function Login({ history }) {    
+export default function Login({ history }) {    
   return (
     <div>
       <h1>로그인</h1>
       <LoginForm onLogin={function (data) {
-        axios.post(`http://127.0.0.1:5000/login`, data)
+        axios.post(config.API_HOST +`/login`, data)
           .then(response => {
             console.log(response);
             localStorage.setItem("token", (response.data.access_token));
