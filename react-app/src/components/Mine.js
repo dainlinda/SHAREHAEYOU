@@ -25,7 +25,7 @@ export function Mine({history}){
 
   //학력 정보 받아오는 함수
   useEffect(()=>{
-    axios.get(`http://127.0.0.1:5000/education`, {
+    axios.get(`http://elice-kdt-ai-track-vm-racer-08.koreacentral.cloudapp.azure.com:5000/education`, {
       headers:{
         Authorization: "Bearer " + localStorage.getItem("token")
       }
@@ -107,11 +107,11 @@ export function Mine({history}){
             {education}
           </ul>
           <EducationForm onCreate={function (data) { 
-            axios.post(`http://127.0.0.1:5000/education`, data, {
+            axios.post(`http://elice-kdt-ai-track-vm-racer-08.koreacentral.cloudapp.azure.com:5000/education`, data, {
               headers:{
                 Authorization: "Bearer " + localStorage.getItem("token")
               }
-            });
+            }).then(window.location.reload());
             // history.push('/mine'); 
           }
             } 
@@ -131,7 +131,7 @@ export function Mine({history}){
       );
     } else if(mode === 'DELETE'){
       console.log('delete:',selectedId);
-      axios.delete(`http://127.0.0.1:5000/education`, {
+      axios.delete(`http://elice-kdt-ai-track-vm-racer-08.koreacentral.cloudapp.azure.com:5000/education`, {
         data:{id: selectedId},
         headers:{
           Authorization: "Bearer " + localStorage.getItem("token")
@@ -151,11 +151,11 @@ export function Mine({history}){
               </ul>
             <EducationForm onCreate={function (data) { 
               data.id=selectedId;
-              axios.put(`http://127.0.0.1:5000/education`, data, {
+              axios.put(`http://elice-kdt-ai-track-vm-racer-08.koreacentral.cloudapp.azure.com:5000/education`, data, {
                 headers:{
                   Authorization: "Bearer " + localStorage.getItem("token")
                 }
-              });
+              }).then(window.location.reload());
               console.log(data);
               // history.push('/mine'); 
             }
@@ -266,7 +266,7 @@ function EducationForm(props){
       </fieldset>
 
       <Form.Group as={Row}>
-          <Button variant="primary" type="submit" onClick={()=>window.location.reload()}>
+          <Button variant="primary" type="submit">
             저장
           </Button>
           <Button variant="light" onClick={()=>window.location.reload()}>
@@ -447,7 +447,7 @@ function CertificatesForm(props){
 //       <div>
 //         <h1>내 포트폴리오 보기</h1>
 //         <EducationForm onCreate={function (data) { 
-//           axios.post(`http://127.0.0.1:5000/Education`, data, {
+//           axios.post(`http://elice-kdt-ai-track-vm-racer-08.koreacentral.cloudapp.azure.com:5000/Education`, data, {
 //             headers:{
 //               Authorization: "Bearer " + localStorage.getItem("token")
 //             }
@@ -456,7 +456,7 @@ function CertificatesForm(props){
 //           }  
 //           />
 //         <AwardsForm onCreate={function (data) { 
-//           axios.post(`http://127.0.0.1:5000/awards`, data, {
+//           axios.post(`http://elice-kdt-ai-track-vm-racer-08.koreacentral.cloudapp.azure.com:5000/awards`, data, {
 //             headers:{
 //               Authorization: "Bearer " + localStorage.getItem("token")
 //             }
@@ -465,7 +465,7 @@ function CertificatesForm(props){
 //           }  
 //           />
 //         <ProjectsForm onCreate={function (data) { 
-//           axios.post(`http://127.0.0.1:5000/projects`, data, {
+//           axios.post(`http://elice-kdt-ai-track-vm-racer-08.koreacentral.cloudapp.azure.com:5000/projects`, data, {
 //             headers:{
 //               Authorization: "Bearer " + localStorage.getItem("token")
 //             }
@@ -474,7 +474,7 @@ function CertificatesForm(props){
 //           }  
 //           />
 //           <CertificatesForm onCreate={function (data) { 
-//           axios.post(`http://127.0.0.1:5000/certificates`, data, {
+//           axios.post(`http://elice-kdt-ai-track-vm-racer-08.koreacentral.cloudapp.azure.com:5000/certificates`, data, {
 //             headers:{
 //               Authorization: "Bearer " + localStorage.getItem("token")
 //             }

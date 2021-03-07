@@ -8,7 +8,7 @@ export function Login({ history }) {
     <div>
       <h1>로그인</h1>
       <LoginForm onLogin={function (data) {
-        axios.post(`http://127.0.0.1:5000/login`, data)
+        axios.post(`http://elice-kdt-ai-track-vm-racer-08.koreacentral.cloudapp.azure.com:5000/login`, data)
           .then(response => {
             console.log(response);
             localStorage.setItem("token", (response.data.access_token));
