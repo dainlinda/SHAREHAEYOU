@@ -1,87 +1,58 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { Component, useEffect } from 'react';
-import { ButtonToolbar } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import * as config from './config';
+import axios from 'axios';
+import loginplz from './components/user/loginplz.gif'
 
-//react-router
-import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
-import { Mine } from './components/Mine';
-import { Login } from './components/Login';
-import { Signup } from './components/Signup';
-import { Logout } from './components/Logout';
-import { Vip } from './components/Vip';
-import HistorySample from './components/HistorySample';
+import {LoginMenu, LogoutMenu } from './Menu';
 
 function App() {
   const token = localStorage.getItem("token");
-  if(token){
+  if(token){ //로그인 되어 있을 때 메뉴
     return (
-      <div>
-        <BrowserRouter>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/logout">로그아웃</Link>
-            </li>
-            <li>
-              <Link to="/mine">내 포트폴리오 CRUD</Link>
-            </li>
-            <li>
-              <Link to="/vip">vip 접근가능구역</Link>
-            </li>
-            <li>
-              <Link to="/history">예제</Link>
-            </li>
-          </ul>
-          <Switch>
-            <Route exact path="/" component={Home}></Route>
-            <Route exact path="/logout" component={Logout}></Route>
-            <Route exact path="/mine" component={Mine}></Route>
-            <Route exact path="/vip" component={Vip}></Route>
-            <Route path="/history" component={HistorySample} />
-          </Switch>
-        </BrowserRouter>
-      </div>
+      <LoginMenu />
     );
-  } else {
+  } else { //로그인 안 되어 있을 때 메뉴
     return (
-      <div>
-        <BrowserRouter>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/signup">회원 가입</Link>
-            </li>
-            <li>
-              <Link to="/login">로그인</Link>
-            </li>
-            <li>
-              <Link to="/vip">vip 접근가능구역</Link>
-            </li>
-            <li>
-              <Link to="/history">예제</Link>
-            </li>
-          </ul>
-          <Switch>
-            <Route exact path="/" component={Home}></Route>
-            <Route exact path="/signup" component={Signup}></Route>
-            <Route exact path="/login" component={Login}></Route>
-            <Route exact path="/vip" component={Vip}></Route>
-            <Route path="/history" component={HistorySample} />
-          </Switch>
-        </BrowserRouter>
-      </div>
+      <LogoutMenu />
     );
   }
 }
 
-function Home() {
-  return <div>Home component</div>;
-}
-
 export default App;
+export function Home() {
+  const [user, setUser] = useState();
+  const token = localStorage.getItem("token");
+    console.log(config.API_HOST);
+    useEffect(()=>{
+        axios.get(config.API_HOST + '/protected', {
+        headers:{
+            Authorization: "Bearer " + token
+        }
+    })
+        .then(response=>{
+            setUser(response.data.logged_in_as.name);
+        });
+    },[]);
+  if(token){
+    return (
+      <div>
+        <h1>
+          {user}님!!!!! 오늘도 방문해주셨군요!
+        </h1>
+        <img src= "https://pbs.twimg.com/media/EYEZb15UYAQfWj9.jpg"/>    
+      </div>
+    );  
+  } else {
+    return (
+      <div>
+        <h1>
+          로그인하고 다시 돌아와라 애송이!!
+        </h1>
+        <img src={loginplz} />
 
-
+        {/* <img src="https://upload3.inven.co.kr/upload/2020/12/31/bbs/i014750817864.gif" width='250'/>    */}
+      </div>
+    );  
+  }
+}
