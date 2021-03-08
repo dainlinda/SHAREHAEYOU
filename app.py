@@ -84,7 +84,10 @@ def login():
     cursor.execute(sql, (args['email'],))
     user = cursor.fetchone()  
     if check_password_hash(user['password'], args['password']):
-        token_identity = {'id': user['id'], 'name': user['fullname'], 'email':user['email']}
+        sql2 = "UPDATE `user` SET visit = %s WHERE id = %s" #추가
+        visit = user['visit'] + 1
+        cursor.execute(sql2, (visit,user['id'])) #추가
+        token_identity = {'id': user['id'], 'name': user['fullname'], 'email':user['email'], 'visit':user['visit']} #추가
         access_token = create_access_token(identity=token_identity)
         return jsonify(status = "success", access_token=access_token)
     else: #아이디, 비밀번호가 일치하지 않는 경우

@@ -5,19 +5,30 @@ import Awards from './Awards';
 import Projects from './Projects';
 import Certificates from './Certificates';
 import Profile from './Profile';
-import { ListGroup} from 'react-bootstrap';
+import { ListGroup, Row, Col, Container } from 'react-bootstrap';
 
 
 export default function Mine(){
     return (
-        <>
-        <Profile />
-        <ListGroup>
-            <Education />
-            <Awards />
-            <Projects />
-            <Certificates />
-        </ListGroup>
-        </>
+        <Container>
+        <Row>
+            <Col>
+                 <br />
+                <Profile />
+            </Col>
+            <Col>
+                <br />
+                <ListGroup>
+                    <Education />
+                    <br />
+                    <Awards />
+                    <br />
+                    <Projects />
+                    <br />
+                    <Certificates />
+                </ListGroup>
+            </Col>
+        </Row>
+        </Container>
     );
 }

@@ -1,8 +1,9 @@
-import { ListGroupItem, ListGroup, Card, CardColumns} from 'react-bootstrap';
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import * as config from '../../config';
 import axios from 'axios';
+import { ListGroupItem, ListGroup, Card, Row, Col, Container } from 'react-bootstrap';
+
 
 //학위 숫자->글자 변환해주는 함수
 function degreeChange(degree) {
@@ -49,7 +50,6 @@ export default function Userdetail(){
             setAward(response.data.result_award);
             setProject(response.data.result_project);
             setCert(response.data.result_cert);
-            console.log('testssssssprofilesssss',profile);
             // console.log(edu);
             // console.log(award);
             // console.log(project);
@@ -84,46 +84,52 @@ export default function Userdetail(){
   );
 
     return (
-    <>
-        <Card style={{ width: '18rem' }}>
-            <Card.Img variant="top" src={profile.image_path?profile.image_path:'http://asq.kr/Rl5W7DwTbCO5FV'} />
-            <Card.Body>
-                <Card.Title>{profile.fullname}</Card.Title>
-                <Card.Text>
-                {profile.email}
-                </Card.Text>
-            </Card.Body>
-            <ListGroup className="list-group-flush">
-                <ListGroupItem>{profile.bio?profile.bio:'Hi! This is Racer!'}</ListGroupItem>
-            </ListGroup>
-        </Card>
-        <ListGroup>
-            <ListGroup.Item>
-                <h2>학력</h2>
-                <ul>
-                {education}
-                </ul>
-            </ListGroup.Item>
-            <ListGroup.Item>
-                <h2>수상이력</h2>
-                <ul>
-                {awards}
-                </ul>
-            </ListGroup.Item>
-            <ListGroup.Item>
-                <h2>프로젝트</h2>
-                <ul>
-                {projects}
-                </ul>
-            </ListGroup.Item>
-            <ListGroup.Item>
-                <h2>자격증</h2>
-                <ul>
-                {certificates}
-                </ul>
-            </ListGroup.Item>
-        </ListGroup>
-    </>
+    <Container>
+        <Row>
+            <Col>
+                <Card style={{ width: '18rem' }}>
+                    <Card.Img variant="top" src={profile.image_path?profile.image_path:'http://asq.kr/Rl5W7DwTbCO5FV'} />
+                    <Card.Body>
+                        <Card.Title>{profile.fullname}</Card.Title>
+                        <Card.Text>
+                        {profile.email}
+                        </Card.Text>
+                    </Card.Body>
+                    <ListGroup className="list-group-flush">
+                        <ListGroupItem>{profile.bio?profile.bio:'Hi! This is Racer!'}</ListGroupItem>
+                    </ListGroup>
+                </Card>
+            </Col>
+            <Col>
+                <ListGroup>
+                    <ListGroup.Item>
+                        <h2>학력</h2>
+                        <ul>
+                        {education}
+                        </ul>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                        <h2>수상이력</h2>
+                        <ul>
+                        {awards}
+                        </ul>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                        <h2>프로젝트</h2>
+                        <ul>
+                        {projects}
+                        </ul>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                        <h2>자격증</h2>
+                        <ul>
+                        {certificates}
+                        </ul>
+                    </ListGroup.Item>
+                </ListGroup>
+            </Col>
+        </Row>
+    </Container>
     );
 
 }

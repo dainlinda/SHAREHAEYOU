@@ -2,7 +2,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useEffect, useState } from 'react';
 import * as config from './config';
 import axios from 'axios';
-import loginplz from './components/user/loginplz.gif'
+import loginplz from './components/user/loginplz.gif';
+import './App.css'
+import { Media } from 'react-bootstrap';
+
 
 import {LoginMenu, LogoutMenu } from './Menu';
 
@@ -36,16 +39,18 @@ export function Home() {
     },[]);
   if(token){
     return (
-      <div>
+      <div style={{textAlign: "center"}}>
+        <br/>
         <h1>
           {user}님!!!!! 오늘도 방문해주셨군요!
         </h1>
-        <img src= "https://pbs.twimg.com/media/EYEZb15UYAQfWj9.jpg"/>    
+        <img src= "https://pbs.twimg.com/media/EYEZb15UYAQfWj9.jpg" height={450} className="mr-3"/>    
       </div>
     );  
   } else {
     return (
-      <div>
+      <div style={{textAlign: "center"}}>
+        <br/>
         <h1>
           로그인하고 다시 돌아와라 애송이!!
         </h1>

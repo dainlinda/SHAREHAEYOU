@@ -6,7 +6,7 @@ import * as config from '../../config';
 
 export default function Login({ history }) {    
   return (
-    <div>
+    <div style={{textAlign:"center"}}>
       <h1>로그인</h1>
       <LoginForm onLogin={function (data) {
         axios.post(config.API_HOST +`/login`, data)

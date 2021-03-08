@@ -22,7 +22,8 @@ export default function Users({history}){
     //윗 부분 read 정보
     const user = users.map((item, index) => 
         <Card key={index} onClick={() => history.push(`/userdetail/${item.id}`)}>
-            <Card.Img variant="top" src={item.image_path? item.image_path : 'http://asq.kr/Rl5W7DwTbCO5FV'} />
+            <Card.Img variant="top" 
+            src={item.image_path? item.image_path : 'http://asq.kr/Rl5W7DwTbCO5FV'}/>
             <Card.Body>
             <Card.Title>{item.fullname}</Card.Title>
             <Card.Text>

@@ -1,4 +1,4 @@
-export const API_HOST = 'http://127.0.0.1:5000';
+export const API_HOST = 'http://elice-kdt-ai-track-vm-racer-08.koreacentral.cloudapp.azure.com:5000';
 export const ES_INDEX_NAME = 'img_text_data';
 export const ES_DOC_TYPE = '_doc'
 

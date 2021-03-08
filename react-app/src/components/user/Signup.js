@@ -12,7 +12,7 @@ export default function Signup({history}) {
     history.push('/login');
   }
   return (
-    <div>
+    <div style={{textAlign:"center"}}>
       <h1>회원가입</h1>
       <SignupForm onCreate={function (data) { 
         axios.post(config.API_HOST +`/signup`, data)
@@ -45,9 +45,6 @@ function SignupForm(props) {
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
           <Form.Control type="email" placeholder="Enter email" name="formBasicEmail" />
-          <Form.Text className="text-muted">
-            Check your email.
-          </Form.Text>
         </Form.Group>
         <Form.Group controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
